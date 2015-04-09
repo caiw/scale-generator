@@ -15,8 +15,11 @@ This is equivalent to the following:
 """
 
 import re
+
 import scipy
 import scipy.io
+
+from midiutil.MidiFile3 import MIDIFile
 
 from cw_common import *
 
@@ -134,20 +137,61 @@ def intervals_to_notes(intervals, start_with=0):
 
     return note_list
 
+def intervals_to_midifile(intervals, starting_note=69, tempo_bpm=120, track_name="track name"): #69 is middle A??
+    current_note = starting_note
+    midi_note_list = [current_note]
+    for interval in intervals:
+        current_note += interval
+        midi_note_list.append(current_note)
 
-def main():
+    midi_file = MIDIFile(1)
+
+    # constants
+    track = 0
+    channel = 0
+    volume = 100
+    timestep = 1
+    note_duration = 1
+
+    # initialise time
+    time = 0
+
+    midi_file.addTrackName(track, time, track_name)
+    midi_file.addTempo(track, time, tempo_bpm)
+
+    for note in midi_note_list:
+        midi_file.addNote(track, channel, note, time, note_duration, volume)
+        time += timestep
+
+    return midi_file
+
+
+def main(no_fewer_than=7, save_files=False):
     # TODO: We're not discarding those which are cyclic permutations of others
 
     list_of_partitions = partition_with_intervals(OCTAVE)
     scale_number = 1
     for partition in list_of_partitions:
         # Only interested in scales with at least 7 notes.
-        if len(partition) < 7:
+        if len(partition) < no_fewer_than:
             continue
-        else:
-            prints(scale_number, partition, intervals_to_notes(partition))
-            scale_number += 1
 
+        #todo it's missing some [1,11]
+
+        #todo should discard some if it's the same as an existing one but with a note removed
+
+            prints(scale_number, partition, intervals_to_notes(partition))
+
+        midi_file_name = "scale-{0}.mid".format(scale_number)
+        midi_file = intervals_to_midifile(partition)
+
+        with open(midi_file_name, "wb") as opened_file:
+            midi_file.writeFile(opened_file)
+
+        scale_number += 1
 
 if __name__ == "__main__":
-    main()
+    main(
+        save_files=True,
+        no_fewer_than=1
+    )
