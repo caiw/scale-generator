@@ -45,15 +45,22 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
             # Can use -1 as an error case
             return [[DEAD_END]]
 
-    # If exactly 2 is remaining, there are a small number of possible
+    # If exactly 2 are remaining, there are a small number of possible
     # partitions.
-    # By providing results for 0, 1 and 2 remaining, we have paths forward
-    # whether or not an initial 1 is permitted.
     elif remaining == 2:
+        return [[2]]
+
+    # If exactly 3 are remaining, there are a small number of possible
+    # partitions.
+    elif remaining == 3:
         if initial_one_allowed:
-            return [[1,1], [2]]
+            return [[1,2], [2,1], [3]]
         else:
-            return [[2]]
+            return [[2,1], [3]]
+
+
+    # By providing results for 0, 1, 2 and 3 remaining, we have paths forward
+    # whether or not an initial 1 is permitted.
 
     # If more than 2 remain, we are in our recursion case, and we defer
     # partitioning to another function call.
@@ -62,7 +69,7 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
         if initial_one_allowed:
             start = 1
         else:
-            start = 1
+            start = 2
 
         # The partition of this interval will be all possible interval choices
         # crossed by all possible partitions of the remaining part of the
@@ -116,8 +123,12 @@ def main():
     list_of_partitions = partition_with_intervals(OCTAVE)
     scale_number = 1
     for partition in list_of_partitions:
-        prints(scale_number, partition, sum(partition))
-        scale_number += 1
+        # Only interested in scales with at least 7 notes, which is 6 intervals
+        if len(partition) < 6:
+            continue
+        else:
+            prints(scale_number, partition)
+            scale_number += 1
 
 
 if __name__ == "__main__":
