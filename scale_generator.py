@@ -24,8 +24,9 @@ from cw_common import *
 
 ## Some Connstants
 
-# The number of semitones in an octave
-OCTAVE = 12
+# The notes in an octave
+NOTES = ['A', 'B♭', 'B', 'C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭']
+OCTAVE = len(NOTES)
 
 # We use this to denote a partition that cannot be completed
 DEAD_END = -1
@@ -116,18 +117,35 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
         # octave, so we can return it to the next level up.
         return interval_list
 
+def intervals_to_notes(intervals, start_with=0):
+    """
+    Takes a list of intervals and produces a list of notes reached by following
+    those intervals.
+    """
+
+    # Start with the specified first note
+    note_pointer = start_with
+    note_list = [NOTES[note_pointer]]
+
+    for interval in intervals:
+        note_pointer += interval
+        note_pointer %= OCTAVE
+        note_list.append(NOTES[note_pointer])
+
+    return note_list
 
 
 def main():
+    # TODO: We're not discarding those which are cyclic permutations of others
 
     list_of_partitions = partition_with_intervals(OCTAVE)
     scale_number = 1
     for partition in list_of_partitions:
-        # Only interested in scales with at least 7 notes, which is 6 intervals
-        if len(partition) < 6:
+        # Only interested in scales with at least 7 notes.
+        if len(partition) < 7:
             continue
         else:
-            prints(scale_number, partition)
+            prints(scale_number, partition, intervals_to_notes(partition))
             scale_number += 1
 
 
