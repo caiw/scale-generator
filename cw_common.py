@@ -125,7 +125,7 @@ def prints(*args, sep=' ', end='\n', file=None):
     end:   string appended after the last value, default a newline.
     flush: whether to forcibly flush the stream.
     """
-    timestamp = "[{0}]".format(datetime.now())
+    timestamp = "<{0}>".format(datetime.now())
     print(timestamp, *args, sep=sep, end=end, file=file)
 
 
