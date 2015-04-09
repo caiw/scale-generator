@@ -80,7 +80,7 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
         # crossed by all possible partitions of the remaining part of the
         # octave.
 
-        interval_list = []
+        partition_list = []
 
         # We go through all possible intervals we are allowed to choose at this
         # stage.
@@ -115,11 +115,11 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
                     # portion of an octave*.
 
                     # So we add it to the list
-                    interval_list.append(this_partition)
+                    partition_list.append(this_partition)
 
         # Now we have all possible partitions of our provided portion of the
         # octave, so we can return it to the next level up.
-        return interval_list
+        return partition_list
 
 def intervals_to_notes(intervals, start_with=0):
     """
