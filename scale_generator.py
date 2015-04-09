@@ -28,7 +28,8 @@ from cw_common import *
 ## Some Connstants
 
 # The notes in an octave
-NOTES = ['A', 'B♭', 'B', 'C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭']
+#NOTES = ['A', 'B♭', 'B', 'C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭']
+NOTES = ['R', '♭2', '2', '♭3', 'M3', '4', '♯4', '5', '♯5', '6', '♭7', 'M7']
 OCTAVE = len(NOTES)
 
 # We use this to denote a partition that cannot be completed
@@ -180,7 +181,7 @@ def main(no_fewer_than=7, save_files=False):
 
         #todo should discard some if it's the same as an existing one but with a note removed
 
-            prints(scale_number, partition, intervals_to_notes(partition))
+        prints(scale_number, partition, intervals_to_notes(partition))
 
         midi_file_name = "scale-{0}.mid".format(scale_number)
         midi_file = intervals_to_midifile(partition)
