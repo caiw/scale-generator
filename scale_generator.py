@@ -117,6 +117,10 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
                     # So we add it to the list
                     partition_list.append(this_partition)
 
+
+        # Finally add the trivial partition
+        partition_list.append([remaining])
+
         # Now we have all possible partitions of our provided portion of the
         # octave, so we can return it to the next level up.
         return partition_list
@@ -177,8 +181,6 @@ def main(no_fewer_than=7, save_files=False):
         if len(partition) < no_fewer_than:
             continue
 
-        #todo it's missing some [1,11]
-
         #todo should discard some if it's the same as an existing one but with a note removed
 
         prints(scale_number, partition, intervals_to_notes(partition))
@@ -193,6 +195,6 @@ def main(no_fewer_than=7, save_files=False):
 
 if __name__ == "__main__":
     main(
-        save_files=True,
-        no_fewer_than=1
+        save_files=False,
+        no_fewer_than=6
     )
