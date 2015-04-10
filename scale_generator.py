@@ -15,9 +15,8 @@ This is equivalent to the following:
 """
 
 from midiutil.MidiFile3 import MIDIFile
-
-from cw_common import *
-
+from cwcx.Lists import *
+from cwcx.IO import *
 
 ## Some Connstants
 
@@ -92,7 +91,7 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
             left_to_partition = remaining - chosen_interval
 
             # We are only allowed a one as the *next* choice, if we didn't just
-            # p.ick it
+            # pick it.
             one_allowed_as_next_interval = chosen_interval != 1
 
             # It's the recursion step!
