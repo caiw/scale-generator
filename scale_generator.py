@@ -24,7 +24,6 @@ from midiutil.MidiFile3 import MIDIFile
 from cw_common import *
 
 
-
 ## Some Connstants
 
 # The notes in an octave
@@ -34,6 +33,7 @@ OCTAVE = len(NOTES)
 
 # We use this to denote a partition that cannot be completed
 DEAD_END = -1
+
 
 def partition_with_intervals(remaining, initial_one_allowed=True):
 
@@ -125,6 +125,7 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
         # octave, so we can return it to the next level up.
         return partition_list
 
+
 def intervals_to_notes(intervals, start_with=0):
     """
     Takes a list of intervals and produces a list of notes reached by following
@@ -141,6 +142,7 @@ def intervals_to_notes(intervals, start_with=0):
         note_list.append(NOTES[note_pointer])
 
     return note_list
+
 
 def intervals_to_midifile(intervals, starting_note=69, tempo_bpm=120, track_name="track name"): #69 is middle A??
     current_note = starting_note
@@ -196,8 +198,14 @@ def main(no_fewer_than=7, save_files=False):
 
         scale_number += 1
 
+
+def test():
+    pass
+
+
 if __name__ == "__main__":
     main(
         save_files=False,
         no_fewer_than=6
     )
+    #test()
