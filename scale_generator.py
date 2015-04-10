@@ -172,7 +172,12 @@ def intervals_to_midifile(intervals, starting_note=69, tempo_bpm=120, track_name
 
 
 def main(no_fewer_than=7, save_files=False):
+
     # TODO: We're not discarding those which are cyclic permutations of others
+
+    # TODO: Should discard some if it's the same as an existing one but with a note removed
+
+    # TODO: Nicer printed output
 
     list_of_partitions = partition_with_intervals(OCTAVE)
     scale_number = 1
@@ -180,8 +185,6 @@ def main(no_fewer_than=7, save_files=False):
         # Only interested in scales with at least 7 notes.
         if len(partition) < no_fewer_than:
             continue
-
-        #todo should discard some if it's the same as an existing one but with a note removed
 
         prints(scale_number, partition, intervals_to_notes(partition))
 
