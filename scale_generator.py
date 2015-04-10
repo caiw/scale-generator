@@ -190,11 +190,12 @@ def main(no_fewer_than=7, save_files=False):
 
         prints(scale_number, partition, intervals_to_notes(partition))
 
-        midi_file_name = "scale-{0}.mid".format(scale_number)
-        midi_file = intervals_to_midifile(partition)
+        if save_files:
+            midi_file_name = "scale-{0}.mid".format(scale_number)
+            midi_file = intervals_to_midifile(partition)
 
-        with open(midi_file_name, "wb") as opened_file:
-            midi_file.writeFile(opened_file)
+            with open(midi_file_name, "wb") as opened_file:
+                midi_file.writeFile(opened_file)
 
         scale_number += 1
 
