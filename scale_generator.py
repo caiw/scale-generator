@@ -136,6 +136,27 @@ def partition_with_intervals(remaining, initial_one_allowed=True, proper_partiti
         return partition_list
 
 
+def filter_subscales(input_scales):
+    """
+    Remove scales from a list if they are the same as existing scales with some
+    notes removed.
+    :param input_scales:
+    :return:
+    """
+    filtered_list = []
+    for scale in input_scales:
+        refinements = scale_refinements(scale)
+        this_scale_is_clean = True
+        for refinement in refinements:
+            if refinement in input_scales:
+                this_scale_is_clean = False
+                break
+        if this_scale_is_clean:
+            filtered_list.append(scale.copy())
+    return filtered_list
+
+
+
 def scale_refinements(input_scale):
     """
     For a given scale (list of intervals), this will return a list of scales
@@ -287,11 +308,12 @@ def main(no_fewer_than=7, save_files=False):
 
     # TODO: We're not discarding those which are cyclic permutations of others
 
-    # TODO: Should discard some if it's the same as an existing one but with a note removed
-
     # TODO: Nicer printed output
 
     list_of_partitions = partition_with_intervals(OCTAVE)
+
+    list_of_partitions = filter_subscales(list_of_partitions)
+
     scale_number = 1
     for partition in list_of_partitions:
         # Only interested in scales with at least 7 notes.
@@ -315,19 +337,14 @@ def test():
     Just for testing.
     :return:
     """
-    scales = [[2, 3, 2], [1, 3, 2], [1, 3, 1]]
-    for scale in scales:
-        prints("Valid refinements of {0}:".format(scale))
-        for refinement in scale_refinements(scale):
-            prints("\t{0}".format(refinement))
-
-
+    scales = [[2, 1, 2, 2], [2, 3, 2]]
+    prints(filter_subscales(scales))
 
 
 
 if __name__ == "__main__":
-    # main(
-    #     save_files=False,
-    #     no_fewer_than=6
-    # )
-    test()
+    main(
+        save_files=False,
+        no_fewer_than=6
+    )
+    # test()
