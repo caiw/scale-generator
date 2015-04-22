@@ -126,6 +126,47 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
         return partition_list
 
 
+
+def count_consecutive(list_of_values, value_to_count):
+    """
+    Counts consecutive value_to_count-s n list_of_values.
+    So there are 0 consecutive 0s in [1, 2, 2]
+       there are 1 consecutive 1s in [1, 2, 2]
+       there are 2 consecutive 2s in [1, 2, 2]
+    :param list_of_values:
+    :param value_to_count:
+    :return:
+    """
+    value_i = 0
+    previous_vaue = None
+    this_value = None
+    this_consecutive_count = 1
+    # this can be zero if the value never occurs
+    max_consecutive_count = 0
+    while(value_i < len(list_of_values)):
+
+        if value_i == 0:
+            this_value = list_of_values[value_i]
+            # A little hack for the first value:
+            # If it's the value we're counting, we nudge up the max count for
+            # it, so that even if it only appears once, we at least return the
+            # value 1.
+            if this_value == value_to_count:
+                max_consecutive_count = 1
+        else:
+            previous_vaue = this_value
+            this_value = list_of_values[value_i]
+            if (this_value == previous_vaue) and (this_value == value_to_count):
+                this_consecutive_count += 1
+                max_consecutive_count = max(max_consecutive_count, this_consecutive_count)
+            else:
+                this_consecutive_count = 1
+
+        value_i += 1
+
+    return max_consecutive_count
+
+
 def intervals_to_notes(intervals, start_with=0):
     """
     Takes a list of intervals and produces a list of notes reached by following
@@ -222,7 +263,17 @@ def test():
     Just for testing.
     :return:
     """
-    pass
+    l1 = [0, 1, 0, 1, 0, 1, 0, 1]
+    l2 = [1, 1, 0, 1, 1, 1, 0, 0]
+    l3 = [1, 2, 2, 3, 3, 3, 3, 4]
+    prints("The highest number of consecutive {0}s in {1} is {2}.".format(0, l1, count_consecutive(l1, 0)))
+    prints("The highest number of consecutive {0}s in {1} is {2}.".format(1, l1, count_consecutive(l1, 1)))
+    prints("The highest number of consecutive {0}s in {1} is {2}.".format(0, l2, count_consecutive(l2, 0)))
+    prints("The highest number of consecutive {0}s in {1} is {2}.".format(1, l2, count_consecutive(l2, 1)))
+    prints("The highest number of consecutive {0}s in {1} is {2}.".format(0, l3, count_consecutive(l3, 0)))
+    prints("The highest number of consecutive {0}s in {1} is {2}.".format(1, l3, count_consecutive(l3, 1)))
+    prints("The highest number of consecutive {0}s in {1} is {2}.".format(3, l3, count_consecutive(l3, 3)))
+
 
 
 if __name__ == "__main__":
