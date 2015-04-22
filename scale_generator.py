@@ -14,16 +14,9 @@ This is equivalent to the following:
 
 """
 
-import re
-
-import scipy
-import scipy.io
-
 from midiutil.MidiFile3 import MIDIFile
-
-from cw_common import *
-
-
+from cwcx.Lists import *
+from cwcx.IO import *
 
 ## Some Connstants
 
@@ -35,7 +28,14 @@ OCTAVE = len(NOTES)
 # We use this to denote a partition that cannot be completed
 DEAD_END = -1
 
+
 def partition_with_intervals(remaining, initial_one_allowed=True):
+    """
+    Generates all possible partitions of a thing of length `remaining`.
+    Optionally, can specify that the first segment cannot be of length 1.
+    :param remaining:
+    :param initial_one_allowed:
+    """
 
     # If we're done, we can stop here
     if remaining == 0:
@@ -91,7 +91,7 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
             left_to_partition = remaining - chosen_interval
 
             # We are only allowed a one as the *next* choice, if we didn't just
-            # p.ick it
+            # pick it.
             one_allowed_as_next_interval = chosen_interval != 1
 
             # It's the recursion step!
@@ -125,10 +125,13 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
         # octave, so we can return it to the next level up.
         return partition_list
 
+
 def intervals_to_notes(intervals, start_with=0):
     """
     Takes a list of intervals and produces a list of notes reached by following
     those intervals.
+    :param intervals:
+    :param start_with:
     """
 
     # Start with the specified first note
@@ -142,7 +145,16 @@ def intervals_to_notes(intervals, start_with=0):
 
     return note_list
 
-def intervals_to_midifile(intervals, starting_note=69, tempo_bpm=120, track_name="track name"): #69 is middle A??
+
+def intervals_to_midifile(intervals, starting_note=69, tempo_bpm=120, track_name="track name"):
+    """
+    Takes a list of intervals and prodces a midi file returning that scale.
+    :param intervals:
+    :param starting_note: 69 is middle A
+    :param tempo_bpm:
+    :param track_name:
+    :return:
+    """
     current_note = starting_note
     midi_note_list = [current_note]
     for interval in intervals:
@@ -208,7 +220,19 @@ def remove_cyclic_permutations(input_lists):
 
 
 def main(no_fewer_than=7, save_files=False):
+    """
+    The main function.
+    Will usually be executed when this file is run.
+    :param no_fewer_than:
+    :param save_files:
+    :return:
+    """
+
     # TODO: We're not discarding those which are cyclic permutations of others
+
+    # TODO: Should discard some if it's the same as an existing one but with a note removed
+
+    # TODO: Nicer printed output
 
     list_of_partitions = partition_with_intervals(OCTAVE)
 
@@ -220,20 +244,29 @@ def main(no_fewer_than=7, save_files=False):
         if len(partition) < no_fewer_than:
             continue
 
-        #todo should discard some if it's the same as an existing one but with a note removed
-
         prints(scale_number, partition, intervals_to_notes(partition))
 
-        midi_file_name = "scale-{0}.mid".format(scale_number)
-        midi_file = intervals_to_midifile(partition)
+        if save_files:
+            midi_file_name = "scale-{0}.mid".format(scale_number)
+            midi_file = intervals_to_midifile(partition)
 
-        with open(midi_file_name, "wb") as opened_file:
-            midi_file.writeFile(opened_file)
+            with open(midi_file_name, "wb") as opened_file:
+                midi_file.writeFile(opened_file)
 
         scale_number += 1
+
+
+def test():
+    """
+    Just for testing.
+    :return:
+    """
+    pass
+
 
 if __name__ == "__main__":
     main(
         save_files=False,
         no_fewer_than=6
     )
+    #test()
