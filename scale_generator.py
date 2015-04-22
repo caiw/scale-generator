@@ -29,7 +29,7 @@ OCTAVE = len(NOTES)
 DEAD_END = -1
 
 
-def partition_with_intervals(remaining, initial_one_allowed=True):
+def partition_with_intervals(remaining, initial_one_allowed=True, proper_partitions_only=False):
     """
     Generates all possible partitions of a thing of length `remaining`.
     Optionally, can specify that the first segment cannot be of length 1.
@@ -53,15 +53,24 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
     # If exactly 2 are remaining, there are a small number of possible
     # partitions.
     elif remaining == 2:
-        return [[2]]
+        if proper_partitions_only:
+            return []
+        else:
+            return [[2]]
 
     # If exactly 3 are remaining, there are a small number of possible
     # partitions.
     elif remaining == 3:
         if initial_one_allowed:
-            return [[1,2], [2,1], [3]]
+            if proper_partitions_only:
+                return [[1,2], [2,1]]
+            else:
+                return [[1,2], [2,1], [3]]
         else:
-            return [[2,1], [3]]
+            if proper_partitions_only:
+                return [[2,1]]
+            else:
+                return [[2,1], [3]]
 
 
     # By providing results for 0, 1, 2 and 3 remaining, we have paths forward
@@ -119,12 +128,55 @@ def partition_with_intervals(remaining, initial_one_allowed=True):
 
 
         # Finally add the trivial partition
-        partition_list.append([remaining])
+        if not proper_partitions_only:
+            partition_list.append([remaining])
 
         # Now we have all possible partitions of our provided portion of the
         # octave, so we can return it to the next level up.
         return partition_list
 
+
+def scale_refinements(input_scale):
+    """
+    For a given scale (list of intervals), this will return a list of scales
+    which can be found by sub-partitioning an inverval.
+
+    We don't bother sub-partitioning whole-tones into semitones as we don't
+    ever want chromatic triplets.
+
+    After partitioning, we check for chromatic triplets and filter those out.
+    :param input_scale:
+    :return:
+    """
+    subscale_list = []
+    for interval_i in range(len(input_scale)):
+        this_interval = input_scale[interval_i]
+
+        # We don't care about sub-partitioning wholetones or less.
+        if this_interval <= 2:
+            pass
+        else:
+            # We want to exclude trivial sub-partitions
+            sub_partitions = partition_with_intervals(this_interval, proper_partitions_only=True)
+
+            # For each sub-partition, we see what that would look like grafted
+            # into the main scale.
+            for sub_partition in sub_partitions:
+                grafted_scale = input_scale[:interval_i] + sub_partition + input_scale[interval_i+1:]
+                if not (contains_chromatic_triplets(grafted_scale)):
+                    subscale_list.append(grafted_scale.copy())
+
+    return subscale_list
+
+
+def contains_chromatic_triplets(input_scale):
+    """
+    Returns true if the input scale (list of intervals) contains a chromatic
+    triplet.
+    :param input_scale:
+    :return:
+    """
+    return count_consecutive(input_scale, 1) > 1
 
 
 def count_consecutive(list_of_values, value_to_count):
@@ -263,22 +315,19 @@ def test():
     Just for testing.
     :return:
     """
-    l1 = [0, 1, 0, 1, 0, 1, 0, 1]
-    l2 = [1, 1, 0, 1, 1, 1, 0, 0]
-    l3 = [1, 2, 2, 3, 3, 3, 3, 4]
-    prints("The highest number of consecutive {0}s in {1} is {2}.".format(0, l1, count_consecutive(l1, 0)))
-    prints("The highest number of consecutive {0}s in {1} is {2}.".format(1, l1, count_consecutive(l1, 1)))
-    prints("The highest number of consecutive {0}s in {1} is {2}.".format(0, l2, count_consecutive(l2, 0)))
-    prints("The highest number of consecutive {0}s in {1} is {2}.".format(1, l2, count_consecutive(l2, 1)))
-    prints("The highest number of consecutive {0}s in {1} is {2}.".format(0, l3, count_consecutive(l3, 0)))
-    prints("The highest number of consecutive {0}s in {1} is {2}.".format(1, l3, count_consecutive(l3, 1)))
-    prints("The highest number of consecutive {0}s in {1} is {2}.".format(3, l3, count_consecutive(l3, 3)))
+    scales = [[2, 3, 2], [1, 3, 2], [1, 3, 1]]
+    for scale in scales:
+        prints("Valid refinements of {0}:".format(scale))
+        for refinement in scale_refinements(scale):
+            prints("\t{0}".format(refinement))
+
+
 
 
 
 if __name__ == "__main__":
-    main(
-        save_files=False,
-        no_fewer_than=6
-    )
-    #test()
+    # main(
+    #     save_files=False,
+    #     no_fewer_than=6
+    # )
+    test()
