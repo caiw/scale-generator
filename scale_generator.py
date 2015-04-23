@@ -297,6 +297,42 @@ def intervals_to_midifile(intervals, starting_note=69, tempo_bpm=120, track_name
     return midi_file
 
 
+def cyclic_shift(input_list, n=1):
+    shifted_list = input_list[:n] + input_list[n:]
+    return shifted_list
+
+
+def cyclic_permutations(input_list):
+
+    permutation_list = [input_list]
+
+    permutation = input_list.copy()
+
+    # can skip the last one because we've already got the identity permutation
+    for perutation_i in range(len(input_list) - 1):
+        permutation = cyclic_shift(permutation)
+        permutation_list.append(permutation)
+
+    return permutation_list
+
+
+def remove_cyclic_permutations(input_lists):
+    filtered_list = []
+
+    for input_list in input_lists:
+
+        is_new = True
+        for current_list in filtered_list:
+            if input_list in cyclic_permutations(current_list):
+                is_new = False
+                break
+
+        if is_new:
+            filtered_list.append(input_list)
+
+    return filtered_list
+
+
 def main(no_fewer_than=7, save_files=False):
     """
     The main function.
@@ -306,11 +342,12 @@ def main(no_fewer_than=7, save_files=False):
     :return:
     """
 
-    # TODO: We're not discarding those which are cyclic permutations of others
 
     # TODO: Nicer printed output
 
     list_of_partitions = partition_with_intervals(OCTAVE)
+
+    list_of_partitions = remove_cyclic_permutations(list_of_partitions)
 
     list_of_partitions = filter_subscales(list_of_partitions)
 
