@@ -15,10 +15,11 @@ This is equivalent to the following:
 """
 
 from midiutil.MidiFile3 import MIDIFile
+
 from cwcx.Lists import *
 from cwcx.IO import *
 
-## Some Connstants
+## Some Constants
 
 # The notes in an octave
 #NOTES = ['A', 'B♭', 'B', 'C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭']
@@ -143,14 +144,26 @@ def filter_subscales(input_scales):
     :param input_scales:
     :return:
     """
+
+    # Collect scales which pass the test
     filtered_list = []
+
     for scale in input_scales:
+
+        # List of possible refinements of this scale
         refinements = scale_refinements(scale)
+
+        # For each refinement of the current scale, we'll go through the
+        # other scales in the list, ...
         this_scale_is_clean = True
         for refinement in refinements:
+            # ... and if one of the refiments already exists, ...
             if refinement in input_scales:
+                # ... we mark this scale as tainted
                 this_scale_is_clean = False
                 break
+        # ... and only if it isn't tainted after we've considered all
+        # refinements will we add it to our list.
         if this_scale_is_clean:
             filtered_list.append(scale.copy())
     return filtered_list
@@ -169,21 +182,32 @@ def scale_refinements(input_scale):
     :param input_scale:
     :return:
     """
+
+    # The list of refinements of the current scale
     subscale_list = []
+
+    # We're using the interval index here as the loop variable, rather than the
+    # interval itself, as we'll use it for slicing later.
     for interval_i in range(len(input_scale)):
         this_interval = input_scale[interval_i]
 
-        # We don't care about sub-partitioning wholetones or less.
+        # We don't care about sub-partitioning wholetones or less, as
+        # partitioning a wholetone can only be into a chromatic pair, which we
+        # don't want
         if this_interval <= 2:
             pass
+
+        # So we look at partitioning intervals greater than whole tones.
         else:
             # We want to exclude trivial sub-partitions
             sub_partitions = partition_with_intervals(this_interval, proper_partitions_only=True)
 
             # For each sub-partition, we see what that would look like grafted
-            # into the main scale.
+            # into the whole scale.
             for sub_partition in sub_partitions:
                 grafted_scale = input_scale[:interval_i] + sub_partition + input_scale[interval_i+1:]
+
+                # And if this new scale passes the test, we add it to the list.
                 if not (contains_chromatic_triplets(grafted_scale)):
                     subscale_list.append(grafted_scale.copy())
 
