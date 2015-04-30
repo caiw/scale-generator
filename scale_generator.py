@@ -357,6 +357,26 @@ def remove_cyclic_permutations(input_lists):
     return filtered_list
 
 
+def filter_by_length(input_lists, minimum=-1, maximum=-1):
+    """
+    Filters a list of lists by their length.
+    :param input_lists:
+    :param minimum:
+    :param maximum:
+    :return:
+    """
+    filter_by_min_length = (minimum >= 0)
+    filter_by_max_length = (maximum >= 0)
+
+    # Collects lists whichpass lenght requirements
+    output_lists = []
+    for input_list in input_lists:
+        if (not filter_by_min_length) or (len(input_list) >= minimum):
+            if (not filter_by_max_length) or (len(input_list) <= maximum):
+                output_lists.append(input_list.copy())
+    return output_lists
+
+
 def main(no_fewer_than=7, save_files=False):
     """
     The main function.
@@ -366,26 +386,29 @@ def main(no_fewer_than=7, save_files=False):
     :return:
     """
 
+    # TODO: Nicer printed output.
+    # TODO: Classification and naming of scales.
 
-    # TODO: Nicer printed output
+    # Produce list of scales.
 
-    list_of_partitions = partition_with_intervals(OCTAVE)
+    list_of_scales = partition_with_intervals(OCTAVE)
 
-    list_of_partitions = remove_cyclic_permutations(list_of_partitions)
+    list_of_scales = remove_cyclic_permutations(list_of_scales)
 
-    list_of_partitions = filter_subscales(list_of_partitions)
+    list_of_scales = filter_subscales(list_of_scales)
+
+    list_of_scales = filter_by_length(list_of_scales, minimum=no_fewer_than)
+
+    # Display and save to MIDI files.
 
     scale_number = 1
-    for partition in list_of_partitions:
-        # Only interested in scales with at least 7 notes.
-        if len(partition) < no_fewer_than:
-            continue
+    for scale in list_of_scales:
 
-        prints(scale_number, partition, intervals_to_notes(partition))
+        prints(scale_number, scale, intervals_to_notes(scale))
 
         if save_files:
             midi_file_name = "scale-{0}.mid".format(scale_number)
-            midi_file = intervals_to_midifile(partition)
+            midi_file = intervals_to_midifile(scale)
 
             with open(midi_file_name, "wb") as opened_file:
                 midi_file.writeFile(opened_file)
