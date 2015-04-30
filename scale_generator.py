@@ -342,7 +342,7 @@ def cyclic_shift(input_list, n=1):
     :param n:
     :return:
     """
-    shifted_list = input_list[:n] + input_list[n:]
+    shifted_list = input_list[n:] + input_list[:n]
     return shifted_list
 
 
@@ -365,7 +365,7 @@ def cyclic_permutations(input_list):
     return permutation_list
 
 
-def remove_cyclic_permutations(input_lists):
+def filter_cyclic_permutations(input_lists):
     """
     From a list of lists, removes any member which is a cyclic permutation of
     another member.
@@ -374,13 +374,16 @@ def remove_cyclic_permutations(input_lists):
     """
 
     # To collect the lists which pass the test
-    filtered_list = []
+    # We add the first one, no questions asked.
+    filtered_list = [input_lists[0]]
 
-    for input_list in input_lists:
+    # All after the first will get checked.
+    for input_list in input_lists[1:]:
 
         is_new = True
         for current_list in filtered_list:
-            if input_list in cyclic_permutations(current_list):
+            cyclic_perms = cyclic_permutations(current_list)
+            if input_list in cyclic_perms:
                 is_new = False
                 break
 
@@ -403,6 +406,7 @@ def filter_by_length(input_lists, minimum=-1, maximum=-1):
 
     # Collects lists whichpass lenght requirements
     output_lists = []
+
     for input_list in input_lists:
         if (not filter_by_min_length) or (len(input_list) >= minimum):
             if (not filter_by_max_length) or (len(input_list) <= maximum):
@@ -426,7 +430,7 @@ def main(no_fewer_than=7, save_files=False):
 
     list_of_scales = partition_with_intervals(OCTAVE)
 
-    list_of_scales = remove_cyclic_permutations(list_of_scales)
+    list_of_scales = filter_cyclic_permutations(list_of_scales)
 
     list_of_scales = filter_subscales(list_of_scales)
 
@@ -454,9 +458,8 @@ def test():
     Just for testing.
     :return:
     """
-    scales = [[2, 1, 2, 2], [2, 3, 2]]
-    prints(filter_subscales(scales))
-
+    scales = [[1,2,1,2,1,2,1,2], [2,1,2,1,2,1,2,1]]
+    prints(filter_cyclic_permutations(scales))
 
 
 if __name__ == "__main__":
@@ -464,4 +467,5 @@ if __name__ == "__main__":
         save_files=False,
         no_fewer_than=6
     )
-    # test()
+    prints("----------")
+    test()
