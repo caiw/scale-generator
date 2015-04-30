@@ -234,29 +234,42 @@ def count_consecutive(list_of_values, value_to_count):
     :param value_to_count:
     :return:
     """
+
+    # Initialise some values
     value_i = 0
     previous_vaue = None
-    this_value = None
+    current_value = None
     this_consecutive_count = 1
     # this can be zero if the value never occurs
     max_consecutive_count = 0
+
+    # We look through value indices, rather than values, to make it easier to
+    # shuffle the one-back memory.
     while(value_i < len(list_of_values)):
 
+        # The first time is special: we set current value only because there is
+        # no previous value.
         if value_i == 0:
-            this_value = list_of_values[value_i]
+            current_value = list_of_values[value_i]
             # A little hack for the first value:
             # If it's the value we're counting, we nudge up the max count for
             # it, so that even if it only appears once, we at least return the
             # value 1.
-            if this_value == value_to_count:
+            if current_value == value_to_count:
                 max_consecutive_count = 1
+        # For each other time...
         else:
-            previous_vaue = this_value
-            this_value = list_of_values[value_i]
-            if (this_value == previous_vaue) and (this_value == value_to_count):
+            # ...we move the current value to the previous value...
+            previous_vaue = current_value
+            current_value = list_of_values[value_i]
+            # ...compare the previous value to the new current value (and the
+            # value under consideration)...
+            if (current_value == previous_vaue) and (current_value == value_to_count):
+                # ...and count them if they're the same,...
                 this_consecutive_count += 1
                 max_consecutive_count = max(max_consecutive_count, this_consecutive_count)
             else:
+                # ... otherwise reset the count.
                 this_consecutive_count = 1
 
         value_i += 1
@@ -278,6 +291,7 @@ def intervals_to_notes(intervals, start_with=0):
 
     for interval in intervals:
         note_pointer += interval
+        # Wrap around if we reach the end
         note_pointer %= OCTAVE
         note_list.append(NOTES[note_pointer])
 
@@ -322,11 +336,22 @@ def intervals_to_midifile(intervals, starting_note=69, tempo_bpm=120, track_name
 
 
 def cyclic_shift(input_list, n=1):
+    """
+    Applies a cyclic permutation to a list.
+    :param input_list:
+    :param n:
+    :return:
+    """
     shifted_list = input_list[:n] + input_list[n:]
     return shifted_list
 
 
 def cyclic_permutations(input_list):
+    """
+    Lists all cyclic permutations of a given list.
+    :param input_list:
+    :return:
+    """
 
     permutation_list = [input_list]
 
@@ -341,6 +366,14 @@ def cyclic_permutations(input_list):
 
 
 def remove_cyclic_permutations(input_lists):
+    """
+    From a list of lists, removes any member which is a cyclic permutation of
+    another member.
+    :param input_lists:
+    :return:
+    """
+
+    # To collect the lists which pass the test
     filtered_list = []
 
     for input_list in input_lists:
