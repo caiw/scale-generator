@@ -414,7 +414,7 @@ def filter_by_length(input_lists, minimum=-1, maximum=-1):
     return output_lists
 
 
-def main(no_fewer_than=7, save_files=False):
+def main(no_fewer_than=0, save_files=False):
     """
     The main function.
     Will usually be executed when this file is run.
@@ -425,6 +425,12 @@ def main(no_fewer_than=7, save_files=False):
 
     # TODO: Nicer printed output.
     # TODO: Classification and naming of scales.
+
+    # TODO: Log the removed scales at each stage, including reasons for removal.
+
+    # TODO: Check for chromatic triplets in the wrap-around?
+
+    # TODO: Unit tests?!?!
 
     # Produce list of scales.
 
@@ -465,7 +471,7 @@ def test():
 if __name__ == "__main__":
     main(
         save_files=False,
-        no_fewer_than=6
+        #no_fewer_than=6
     )
     prints("----------")
     test()
