@@ -23,7 +23,8 @@ from cwcx.IO import *
 
 # The notes in an octave
 #NOTES = ['A', 'B♭', 'B', 'C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭']
-NOTES = ['R', '♭2', '2', '♭3', 'M3', '4', '♯4', '5', '♯5', '6', '♭7', 'M7']
+#NOTES = ['R', '♭2', '2', '♭3', 'M3', '4', '♯4', '5', '♯5', '6', '♭7', 'M7']
+NOTES = ['R', '♭2', '2', '3', '3', '4', '♯4', '5', '♯5', '6', '♭7', '7']
 OCTAVE = len(NOTES)
 
 # We use this to denote a partition that cannot be completed
@@ -414,6 +415,29 @@ def filter_by_length(input_lists, minimum=-1, maximum=-1):
     return output_lists
 
 
+def display_and_save(list_of_scales, save_files):
+    """
+    Display and save to MIDI files.
+    :param list_of_scales:
+    :return:
+    """
+
+    scale_number = 1
+    for scale in list_of_scales:
+
+        prints(scale_number, "  ", len(scale), "\t", scale, "\t", intervals_to_notes(scale))
+
+        if save_files:
+            midi_file_name = "scale-{0}.mid".format(scale_number)
+            midi_file = intervals_to_midifile(scale)
+
+            with open(midi_file_name, "wb") as opened_file:
+                midi_file.writeFile(opened_file)
+
+        scale_number += 1
+
+
+
 def main(no_fewer_than=0, save_files=False):
     """
     The main function.
@@ -426,13 +450,13 @@ def main(no_fewer_than=0, save_files=False):
     # TODO: Nicer printed output.
     # TODO: Classification and naming of scales.
 
+    # TODO: When removing sub-scales.  Am I checking against *all* scales, or just previous ones?
+
     # TODO: Log the removed scales at each stage, including reasons for removal.
 
     # TODO: Check for chromatic triplets in the wrap-around?
 
     # TODO: Unit tests?!?!
-
-    # Produce list of scales.
 
     list_of_scales = partition_with_intervals(OCTAVE)
 
@@ -442,21 +466,7 @@ def main(no_fewer_than=0, save_files=False):
 
     list_of_scales = filter_by_length(list_of_scales, minimum=no_fewer_than)
 
-    # Display and save to MIDI files.
-
-    scale_number = 1
-    for scale in list_of_scales:
-
-        prints(scale_number, scale, intervals_to_notes(scale))
-
-        if save_files:
-            midi_file_name = "scale-{0}.mid".format(scale_number)
-            midi_file = intervals_to_midifile(scale)
-
-            with open(midi_file_name, "wb") as opened_file:
-                midi_file.writeFile(opened_file)
-
-        scale_number += 1
+    display_and_save(list_of_scales, save_files=save_files)
 
 
 def test():
@@ -471,7 +481,7 @@ def test():
 if __name__ == "__main__":
     main(
         save_files=False,
-        #no_fewer_than=6
+        no_fewer_than=6
     )
     prints("----------")
     test()
