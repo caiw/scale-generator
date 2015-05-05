@@ -437,6 +437,24 @@ def display_and_save(list_of_scales, save_files):
         scale_number += 1
 
 
+def filter_by_chromatic_triples(list_of_scales):
+    """
+    Removes scales from a list if they contain chromatic triplets.
+    :param list_of_scales:
+    :return:
+    """
+    accepted_list = []
+    for scale in list_of_scales:
+        # Don't want a pair of 1s anywhere in the list
+        if contains_sublist(scale, [1, 1]):
+            pass
+        # This includes wrapping through the end, so we shift it once and check again
+        elif contains_sublist(cyclic_shift(scale), [1, 1]):
+            pass
+        else:
+            accepted_list.append(scale.copy())
+    return accepted_list
+
 
 def main(no_fewer_than=0, save_files=False):
     """
@@ -454,8 +472,6 @@ def main(no_fewer_than=0, save_files=False):
 
     # TODO: Log the removed scales at each stage, including reasons for removal.
 
-    # TODO: Check for chromatic triplets in the wrap-around?
-
     # TODO: Unit tests?!?!
 
     list_of_scales = partition_with_intervals(OCTAVE)
@@ -465,6 +481,8 @@ def main(no_fewer_than=0, save_files=False):
     list_of_scales = filter_subscales(list_of_scales)
 
     list_of_scales = filter_by_length(list_of_scales, minimum=no_fewer_than)
+
+    list_of_scales = filter_by_chromatic_triples(list_of_scales)
 
     display_and_save(list_of_scales, save_files=save_files)
 

@@ -51,5 +51,16 @@ def repvect(l, v):
     return l * [v]
 
 
+def contains_sublist(lst, sublst):
+    """
+    http://stackoverflow.com/a/3314913/2883198
+    :param lst:
+    :param sublst:
+    :return:
+    """
+    n = len(sublst)
+    return any((sublst == lst[i:i+n]) for i in range(len(lst)-n+1))
+
+
 if __name__ == "__main__":
 	raise Errors.InvalidOperationError("Don't run library code.")
