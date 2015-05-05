@@ -31,61 +31,46 @@ OCTAVE = len(NOTES)
 DEAD_END = -1
 
 
-def partition_with_intervals(remaining, initial_one_allowed=True, proper_partitions_only=False):
+def partition_with_intervals(remaining, proper_partitions_only=False):
     """
     Generates all possible partitions of a thing of length `remaining`.
-    Optionally, can specify that the first segment cannot be of length 1.
     :param remaining:
-    :param initial_one_allowed:
     """
 
     # If we're done, we can stop here
     if remaining == 0:
         return []
 
-    # If exactly 1 is remaining, we can only proceed if we're allowed to use
-    # 1. Otherwise we can't proceed.
+    # If exactly 1 is remaining, we can only partition it if allowed.
     elif remaining == 1:
-        if initial_one_allowed:
-            return [[1]]
-        else:
-            # Can use -1 as an error case
+        if proper_partitions_only:
             return [[DEAD_END]]
+        else:
+            return [[1]]
 
     # If exactly 2 are remaining, there are a small number of possible
     # partitions.
     elif remaining == 2:
         if proper_partitions_only:
-            return []
+            return [[1,1]]
         else:
-            return [[2]]
+            return [[1,1],[2]]
 
     # If exactly 3 are remaining, there are a small number of possible
     # partitions.
     elif remaining == 3:
-        if initial_one_allowed:
-            if proper_partitions_only:
-                return [[1,2], [2,1]]
-            else:
-                return [[1,2], [2,1], [3]]
+        if proper_partitions_only:
+            return [[1,1,1], [1,2], [2,1]]
         else:
-            if proper_partitions_only:
-                return [[2,1]]
-            else:
-                return [[2,1], [3]]
+            return [[1,1,1], [1,2], [2,1], [3]]
 
 
-    # By providing results for 0, 1, 2 and 3 remaining, we have paths forward
-    # whether or not an initial 1 is permitted.
+    # By providing results for 0, 1, 2 and 3 remaining, we have our base cases,
+    # and so have paths forward.
 
-    # If more than 2 remain, we are in our recursion case, and we defer
+    # If more than 3 remain, we are in our recursion case, and we defer
     # partitioning to another function call.
     else:
-
-        if initial_one_allowed:
-            start = 1
-        else:
-            start = 2
 
         # The partition of this interval will be all possible interval choices
         # crossed by all possible partitions of the remaining part of the
@@ -95,18 +80,14 @@ def partition_with_intervals(remaining, initial_one_allowed=True, proper_partiti
 
         # We go through all possible intervals we are allowed to choose at this
         # stage.
-        for chosen_interval in range(start, remaining + 1):
+        for chosen_interval in range(1, remaining + 1):
 
             # For each one of those intervals, the amount we have *left* to
             # partition is lessened by the interval we chose.
             left_to_partition = remaining - chosen_interval
 
-            # We are only allowed a one as the *next* choice, if we didn't just
-            # pick it.
-            one_allowed_as_next_interval = chosen_interval != 1
-
             # It's the recursion step!
-            partitions_of_remaining = partition_with_intervals(left_to_partition, one_allowed_as_next_interval)
+            partitions_of_remaining = partition_with_intervals(left_to_partition)
 
             # For each partition of the remaining, we prepend our chosen
             # interval, and add it to the list for this level.
@@ -130,7 +111,7 @@ def partition_with_intervals(remaining, initial_one_allowed=True, proper_partiti
 
 
         # Finally add the trivial partition
-        if not proper_partitions_only:
+        if proper_partitions_only:
             partition_list.append([remaining])
 
         # Now we have all possible partitions of our provided portion of the
@@ -192,11 +173,9 @@ def scale_refinements(input_scale):
     for interval_i in range(len(input_scale)):
         this_interval = input_scale[interval_i]
 
-        # We don't care about sub-partitioning wholetones or less, as
-        # partitioning a wholetone can only be into a chromatic pair, which we
-        # don't want
-        if this_interval <= 2:
-            pass
+        # We know we can't sub-partition a semitone.
+        if this_interval <= 1:
+            continue
 
         # So we look at partitioning intervals greater than whole tones.
         else:
@@ -222,61 +201,14 @@ def contains_chromatic_triplets(input_scale):
     :param input_scale:
     :return:
     """
-    return count_consecutive(input_scale, 1) > 1
-
-
-def count_consecutive(list_of_values, value_to_count):
-    """
-    Counts consecutive value_to_count-s n list_of_values.
-    So there are 0 consecutive 0s in [1, 2, 2]
-       there are 1 consecutive 1s in [1, 2, 2]
-       there are 2 consecutive 2s in [1, 2, 2]
-    :param list_of_values:
-    :param value_to_count:
-    :return:
-    """
-
-    # Initialise some values
-    value_i = 0
-    previous_vaue = None
-    current_value = None
-    this_consecutive_count = 1
-    # this can be zero if the value never occurs
-    max_consecutive_count = 0
-
-    # We look through value indices, rather than values, to make it easier to
-    # shuffle the one-back memory.
-    while(value_i < len(list_of_values)):
-
-        # The first time is special: we set current value only because there is
-        # no previous value.
-        if value_i == 0:
-            current_value = list_of_values[value_i]
-            # A little hack for the first value:
-            # If it's the value we're counting, we nudge up the max count for
-            # it, so that even if it only appears once, we at least return the
-            # value 1.
-            if current_value == value_to_count:
-                max_consecutive_count = 1
-        # For each other time...
-        else:
-            # ...we move the current value to the previous value...
-            previous_vaue = current_value
-            current_value = list_of_values[value_i]
-            # ...compare the previous value to the new current value (and the
-            # value under consideration)...
-            if (current_value == previous_vaue) and (current_value == value_to_count):
-                # ...and count them if they're the same,...
-                this_consecutive_count += 1
-                max_consecutive_count = max(max_consecutive_count, this_consecutive_count)
-            else:
-                # ... otherwise reset the count.
-                this_consecutive_count = 1
-
-        value_i += 1
-
-    return max_consecutive_count
-
+    # Don't want a pair of 1s anywhere in the list
+    if contains_sublist(input_scale, [1, 1]):
+        return True
+    # This includes wrapping through the end, so we shift it once and check again
+    elif contains_sublist(cyclic_shift(input_scale), [1, 1]):
+        return True
+    else:
+        return False
 
 def intervals_to_notes(intervals, start_with=0):
     """
@@ -445,13 +377,7 @@ def filter_by_chromatic_triples(list_of_scales):
     """
     accepted_list = []
     for scale in list_of_scales:
-        # Don't want a pair of 1s anywhere in the list
-        if contains_sublist(scale, [1, 1]):
-            pass
-        # This includes wrapping through the end, so we shift it once and check again
-        elif contains_sublist(cyclic_shift(scale), [1, 1]):
-            pass
-        else:
+        if not contains_chromatic_triplets(scale):
             accepted_list.append(scale.copy())
     return accepted_list
 
@@ -476,13 +402,13 @@ def main(no_fewer_than=0, save_files=False):
 
     list_of_scales = partition_with_intervals(OCTAVE)
 
+    list_of_scales = filter_by_chromatic_triples(list_of_scales)
+
     list_of_scales = filter_cyclic_permutations(list_of_scales)
 
     list_of_scales = filter_subscales(list_of_scales)
 
     list_of_scales = filter_by_length(list_of_scales, minimum=no_fewer_than)
-
-    list_of_scales = filter_by_chromatic_triples(list_of_scales)
 
     display_and_save(list_of_scales, save_files=save_files)
 
@@ -492,8 +418,8 @@ def test():
     Just for testing.
     :return:
     """
-    scales = [[1,2,1,2,1,2,1,2], [2,1,2,1,2,1,2,1]]
-    prints(filter_cyclic_permutations(scales))
+    scales = [[1, 3, 1, 3, 2, 2]]
+    prints(filter_subscales(scales))
 
 
 if __name__ == "__main__":
