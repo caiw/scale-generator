@@ -415,24 +415,32 @@ def filter_by_length(input_lists, minimum=-1, maximum=-1):
     return output_lists
 
 
-def display_and_save(list_of_scales, save_files):
+def display_scales(list_of_scales):
     """
     Display and save to MIDI files.
     :param list_of_scales:
     :return:
     """
+    scale_number = 1
+    for scale in list_of_scales:
+        prints(scale_number, len(scale), scale, "\t\t", intervals_to_notes(scale))
+        scale_number += 1
 
+
+def save_scales(list_of_scales):
+    """
+    Display and save to MIDI files.
+    :param list_of_scales:
+    :return:
+    """
     scale_number = 1
     for scale in list_of_scales:
 
-        prints(scale_number, "  ", len(scale), "\t", scale, "\t", intervals_to_notes(scale))
+        midi_file_name = "scale-{0}.mid".format(scale)
+        midi_file = intervals_to_midifile(scale, track_name=midi_file_name)
 
-        if save_files:
-            midi_file_name = "scale-{0}.mid".format(scale)
-            midi_file = intervals_to_midifile(scale, track_name=midi_file_name)
-
-            with open(midi_file_name, "wb") as opened_file:
-                midi_file.writeFile(opened_file)
+        with open(midi_file_name, "wb") as opened_file:
+            midi_file.writeFile(opened_file)
 
         scale_number += 1
 
@@ -483,8 +491,11 @@ def main(no_fewer_than=0, save_files=False):
     list_of_scales = filter_by_length(list_of_scales, minimum=no_fewer_than)
 
     list_of_scales = filter_by_chromatic_triples(list_of_scales)
+    
+    display_scales(list_of_scales)
 
-    display_and_save(list_of_scales, save_files=save_files)
+    if save_files:
+        save_scales(list_of_scales)
 
 
 def test():
