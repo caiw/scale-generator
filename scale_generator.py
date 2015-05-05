@@ -428,8 +428,8 @@ def display_and_save(list_of_scales, save_files):
         prints(scale_number, "  ", len(scale), "\t", scale, "\t", intervals_to_notes(scale))
 
         if save_files:
-            midi_file_name = "scale-{0}.mid".format(scale_number)
-            midi_file = intervals_to_midifile(scale)
+            midi_file_name = "scale-{0}.mid".format(scale)
+            midi_file = intervals_to_midifile(scale, track_name=midi_file_name)
 
             with open(midi_file_name, "wb") as opened_file:
                 midi_file.writeFile(opened_file)
@@ -498,7 +498,7 @@ def test():
 
 if __name__ == "__main__":
     main(
-        save_files=False,
+        save_files=True,
         no_fewer_than=6
     )
     prints("----------")
