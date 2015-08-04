@@ -34,6 +34,7 @@ DEAD_END = -1
 def partition_with_intervals(remaining, proper_partitions_only=False):
     """
     Generates all possible partitions of a thing of length `remaining`.
+    :param proper_partitions_only:
     :param remaining:
     """
 
@@ -156,11 +157,6 @@ def scale_refinements(input_scale):
     """
     For a given scale (list of intervals), this will return a list of scales
     which can be found by sub-partitioning an inverval.
-
-    We don't bother sub-partitioning whole-tones into semitones as we don't
-    ever want chromatic triplets.
-
-    After partitioning, we check for chromatic triplets and filter those out.
     :param input_scale:
     :return:
     """
@@ -188,8 +184,7 @@ def scale_refinements(input_scale):
                 grafted_scale = input_scale[:interval_i] + sub_partition + input_scale[interval_i+1:]
 
                 # And if this new scale passes the test, we add it to the list.
-                if not (contains_chromatic_triplets(grafted_scale)):
-                    subscale_list.append(grafted_scale.copy())
+                subscale_list.append(grafted_scale.copy())
 
     return subscale_list
 
