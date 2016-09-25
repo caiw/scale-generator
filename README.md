@@ -55,7 +55,7 @@ At the moment, the filtering options are:
 
 ### Basic use
 
-[Download](#) and uncompress the code.  The code lives in `scale_generator.py`.  To use it, make sure you have [Python 3](https://www.python.org/downloads/) installed.
+[Download](https://github.com/caiw/scale-generator/archive/master.zip) and uncompress the code.  The code lives in `scale_generator.py`.  To use it, make sure you have [Python 3](https://www.python.org/downloads/) installed.
 
 Then, in a command line, navigate to where you downloaded it, run
 
