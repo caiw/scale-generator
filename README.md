@@ -126,7 +126,11 @@ The following filtering switches can be used, which will remove entries from the
 
 ## Notes about filtering
 
-Filter ordering matters!
+### See what's filtered
+
+You can use `--verbose_filtering` to log what's being filtered out.
+
+### Filter ordering matters!
 
 For example, _just_ use `--filter_subscales`, and you get only one scale:
 
@@ -141,8 +145,8 @@ This only works because we filter chromatic triplets before we filter subscales.
 So the this program applies its filters is:
 
 1. Chromatic triplets.
-2. Cyclic permutations.
-3. Subscales.
+2. Subscales.
+3. Modes.
 4. Maximum interval.
 5. Minimum length.
 

@@ -46,15 +46,16 @@ def main():
 		"--min_length",
 		help="The shortest permitted length of scale.",
 		type=int)
+	parser.add_argument(
+		"--verbose_filtering",
+		help="Display each scale as it is removed, and explain why.",
+		action="store_true")
 
 	args = parser.parse_args()
 
-	# TODO: Nicer printed output.
 	# TODO: Classification and naming of scales.
 
-	# TODO: When removing sub-scales.  Am I checking against *all* scales, or just previous ones?
-
-	# TODO: Log the removed scales at each stage, including reasons for removal.
+	# TODO: Simplify copying.
 
 	# First list all partitions of the octave, this is "all scales", but may have many repeats and have multiple
 	# instances of things we don't want, such as chromatic triplets.
@@ -63,22 +64,23 @@ def main():
 	# Sort by length
 	list_of_scales = sorted(list_of_scales, key=lambda l: len(l))
 
+	# Apply filters
 	if args.filter_chromatic_triplets:
-		list_of_scales = filter_by_chromatic_triples(list_of_scales)
-
-	if args.filter_modes:
-		list_of_scales = filter_cyclic_permutations(list_of_scales)
+		list_of_scales = filter_by_chromatic_triples(list_of_scales, verbose=args.verbose_filtering)
 
 	if args.filter_subscales:
-		list_of_scales = filter_subscales(list_of_scales)
+		list_of_scales = filter_subscales(list_of_scales, verbose=args.verbose_filtering)
+
+	if args.filter_modes:
+		list_of_scales = filter_modes(list_of_scales, verbose=args.verbose_filtering)
 
 	if args.max_interval and args.max_interval > 0:
-		list_of_scales = filter_by_maximum_interval(list_of_scales, maximum_permitted_interval=args.max_interval)
+		list_of_scales = filter_by_maximum_interval(list_of_scales, max_permitted_interval=args.max_interval, verbose=args.verbose_filtering)
 
 	if args.min_length and args.min_length > 0:
-		# TODO: this shouldn't be an optional argument
-		list_of_scales = filter_by_length(list_of_scales, minimum=args.min_length)
+		list_of_scales = filter_by_length(list_of_scales, minimum=args.min_length, verbose=args.verbose_filtering)
 
+	# Save
 	if args.save_midi_to:
 		save_scales_as_midi(list_of_scales, args.save_midi_to)
 

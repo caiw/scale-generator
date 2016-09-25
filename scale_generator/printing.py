@@ -9,7 +9,7 @@ from scale_generator.scales import *
 
 # The notes in an octave
 # Must have length OCTAVE
-NOTES = ['R', 'm2', 'M2', 'm3', 'M3', 'M4', 's4', 'M5', 's5', 'M6', '♭7', 'M7']
+NOTES = ['R', 'm2', 'M2', 'm3', 'M3', 'M4', 's4', 'P5', 's5', 'M6', '♭7', 'M7']
 
 
 def prints(*args, sep=' ', end='\n', file=None):
@@ -30,7 +30,7 @@ def prints(*args, sep=' ', end='\n', file=None):
 	print(timestamp, *args, sep=sep, end=end, file=file)
 
 
-def intervals_to_notes(intervals, start_with=0):
+def scale_to_note_list_str(intervals, start_with=0):
 	"""
 	Takes a list of intervals and produces a list of notes reached by following
 	those intervals.
@@ -51,13 +51,20 @@ def intervals_to_notes(intervals, start_with=0):
 	return note_list
 
 
+def scale_to_interval_list_str(scale):
+	return str(scale)
+
+
 def display_scales(list_of_scales):
 	"""
 	Display and save to MIDI files.
 	:param list_of_scales:
 	:return:
 	"""
+	prints()
+	prints("Listing scales...")
+
 	scale_number = 1
 	for scale in list_of_scales:
-		prints(scale_number, '\t', len(scale), '\t', scale, "\t\t", intervals_to_notes(scale))
+		prints(scale_number, '\t', len(scale), '\t', scale_to_interval_list_str(scale), "\t\t", scale_to_note_list_str(scale))
 		scale_number += 1
