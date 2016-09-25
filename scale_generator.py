@@ -14,10 +14,8 @@ This is equivalent to the following:
 
 """
 
-from midiutil.MidiFile3 import MIDIFile
 
-from cwcx.Lists import *
-from cwcx.IO import *
+from midiutil.MidiFile3 import MIDIFile
 
 # Some Constants
 
@@ -27,6 +25,35 @@ OCTAVE = len(NOTES)
 
 # We use this to denote a partition that cannot be completed
 DEAD_END = -1
+
+
+def prints(*args, sep=' ', end='\n', file=None):
+	"""
+	print(value, ..., sep=' ', end='\n', file=sys.stdout, flush=False)
+
+	Prints the values to a stream, or to sys.stdout by default.
+
+	Attaches a local timestamp to the start of the output.
+
+	Optional keyword arguments:
+	file:  a file-like object (stream); defaults to the current sys.stdout.
+	sep:   string inserted between values, default a space.
+	end:   string appended after the last value, default a newline.
+	flush: whether to forcibly flush the stream.
+	"""
+	timestamp = "<{0}>".format(datetime.now())
+	print(timestamp, *args, sep=sep, end=end, file=file)
+
+
+def contains_sublist(lst, sublst):
+	"""
+	http://stackoverflow.com/a/3314913/2883198
+	:param lst:
+	:param sublst:
+	:return:
+	"""
+	n = len(sublst)
+	return any((sublst == lst[i:i+n]) for i in range(len(lst)-n+1))
 
 
 def partition_with_intervals(remaining_length, proper_partitions_only=False):
