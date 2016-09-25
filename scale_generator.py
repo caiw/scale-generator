@@ -395,8 +395,7 @@ def filter_by_maximum_interval(list_of_scales, maximum_permitted_interval):
 	return accepted_list
 
 
-if __name__ == "__main__":
-
+def main():
 	# TODO: Get this from passed arguments
 	# Some constants
 	save_path = '/Users/cai/Desktop/scales/'
@@ -441,3 +440,11 @@ if __name__ == "__main__":
 	display_scales(list_of_scales)
 
 	#save_scales(list_of_scales, save_path)
+
+
+def test():
+	l = partition_with_intervals(4)
+	display_scales(l)
+
+if __name__ == "__main__":
+	main()
