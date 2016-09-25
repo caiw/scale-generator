@@ -51,18 +51,17 @@ def partition_with_intervals(remaining_length, proper_partitions_only=False):
 	# partitions.
 	elif remaining_length == 2:
 		if proper_partitions_only:
-			return [[1,1]]
+			return [[1, 1]]
 		else:
-			return [[1,1],[2]]
+			return [[1, 1], [2]]
 
 	# If exactly 3 are remaining, there are a small number of possible
 	# partitions.
 	elif remaining_length == 3:
 		if proper_partitions_only:
-			return [[1,1,1], [1,2], [2,1]]
+			return [[1, 1, 1], [1, 2], [2, 1]]
 		else:
-			return [[1,1,1], [1,2], [2,1], [3]]
-
+			return [[1, 1, 1], [1, 2], [2, 1], [3]]
 
 	# By providing results for 0, 1, 2 and 3 remaining, we have our base cases,
 	# and so have paths forward.
@@ -108,7 +107,6 @@ def partition_with_intervals(remaining_length, proper_partitions_only=False):
 					# So we add it to the list
 					partition_list.append(this_partition)
 
-
 		# Finally add the trivial partition
 		if proper_partitions_only:
 			partition_list.append([remaining_length])
@@ -138,7 +136,7 @@ def filter_subscales(input_scales):
 		# other scales in the list, ...
 		this_scale_is_clean = True
 		for refinement in refinements:
-			# ... and if one of the refiments already exists, ...
+			# ... and if one of the refinements already exists, ...
 			if refinement in input_scales:
 				# ... we mark this scale as tainted
 				this_scale_is_clean = False
@@ -148,7 +146,6 @@ def filter_subscales(input_scales):
 		if this_scale_is_clean:
 			filtered_list.append(scale.copy())
 	return filtered_list
-
 
 
 def scale_refinements(input_scale):
@@ -202,6 +199,7 @@ def contains_chromatic_triplets(input_scale):
 		return True
 	else:
 		return False
+
 
 def intervals_to_notes(intervals, start_with=0):
 	"""
@@ -389,7 +387,7 @@ def main(no_fewer_than, save_path):
 	The main function.
 	Will usually be executed when this file is run.
 	:param no_fewer_than:
-	:param save_files:
+	:param save_path:
 	:return:
 	"""
 
