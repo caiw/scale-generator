@@ -32,7 +32,7 @@ DEAD_END = -1
 def partition_with_intervals(remaining_length, proper_partitions_only=False):
 	"""
 	Generates all possible partitions of a thing of length `remaining`.
-	:param proper_partitions_only:
+	:param proper_partitions_only: If this is set to true, the trivial partition of an interval with itself will be excluded.
 	:param remaining_length:
 	"""
 
@@ -108,7 +108,7 @@ def partition_with_intervals(remaining_length, proper_partitions_only=False):
 					partition_list.append(this_partition)
 
 		# Finally add the trivial partition
-		if proper_partitions_only:
+		if not proper_partitions_only:
 			partition_list.append([remaining_length])
 
 		# Now we have all possible partitions of our provided portion of the
