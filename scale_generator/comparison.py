@@ -115,7 +115,7 @@ def most_major_mode(scale):
 	:return:
 	"""
 
-	modes = cyclic_permutations(scale)
+	modes = cyclic_permutations(scale,include_trivial=True)
 
 	m_m_m = None
 	best_score = 0

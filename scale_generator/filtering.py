@@ -149,13 +149,15 @@ def filter_modes(input_scales, verbose=False):
 
 	for scale in input_scales:
 
-		if scale not in rejected_scales:
+		if scale not in rejected_scales and scale not in accepted_scales:
 
 			mode = most_major_mode(scale)
 
 			accepted_scales.append(mode)
 
-			for rejected_scale in cyclic_permutations(mode, include_trivial=False):
+			scales_to_reject = cyclic_permutations(mode, include_trivial=False)
+
+			for rejected_scale in scales_to_reject:
 				rejected_scales.append(rejected_scale)
 				if verbose:
 					prints("Removed {0} because it is a mode of {1}.".format(
