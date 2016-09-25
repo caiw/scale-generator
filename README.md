@@ -124,6 +124,30 @@ The following filtering switches can be used, which will remove entries from the
 : This is another way to achieve something similar. If your scale only has two notes in it, it doesn't sound very scale-like.
 : For example, `-min_length 6` will give you only scales with at least 6 notes in them.
 
+## Notes about filtering
+
+Filter ordering matters!
+
+For example, _just_ use `--filter_subscales`, and you get only one scale:
+
+> `[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]`
+
+since every scale is a subscale of the chromatic scale.
+
+But using `--filter_subscales` _and_ `--filter_chomatic_triplets` gives you 33 scales.
+
+This only works because we filter chromatic triplets before we filter subscales.  By filtering chromatic triplets first, the `[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]` scale is removed, and so it doesn't consume every other scale as a subscale.  If instead we filtered subscales first, we'd get down to `[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]`, and then filter that out as having chromatic triplets, leaving none at all.
+
+So the this program applies its filters is:
+
+1. Chromatic triplets.
+2. Cyclic permutations.
+3. Subscales.
+4. Maximum interval.
+5. Minimum length.
+
+(This ordering happens internally, it doesn't matter what order you give the switches in.)
+
 ## Acknowledgements and disclaimers
 
 - [Mark Wingfield](http://markwingfield.com) was interested in the problem musically, and asked the question.
