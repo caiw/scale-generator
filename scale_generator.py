@@ -382,14 +382,30 @@ def filter_by_chromatic_triples(list_of_scales):
 	return accepted_list
 
 
-def main(no_fewer_than, save_path):
-	"""
-	The main function.
-	Will usually be executed when this file is run.
-	:param no_fewer_than:
-	:param save_path:
-	:return:
-	"""
+def filter_by_maximum_interval(list_of_scales, maximum_permitted_interval):
+	accepted_list = []
+	for scale in list_of_scales:
+		scale_ok = True
+		for interval in scale:
+			if interval > maximum_permitted_interval:
+				scale_ok = False
+				break
+		if scale_ok:
+			accepted_list.append(scale.copy())
+	return accepted_list
+
+
+if __name__ == "__main__":
+
+	# TODO: Get this from passed arguments
+	# Some constants
+	save_path = '/Users/cai/Desktop/scales/'
+
+	allow_chromatic_triplets = True
+	allow_subscales = True
+	allow_cyclic_permutations = True
+	minimum_length = 0
+	maximum_interval = 4
 
 	# TODO: Nicer printed output.
 	# TODO: Classification and naming of scales.
@@ -398,36 +414,30 @@ def main(no_fewer_than, save_path):
 
 	# TODO: Log the removed scales at each stage, including reasons for removal.
 
-	# TODO: Unit tests?!?!
-
+	# First list all partitions of the octave, this is "all scales", but may have many repeats and have multiple
+	# instances of things we don't want, such as chromatic triplets.
 	list_of_scales = partition_with_intervals(OCTAVE)
 
-	list_of_scales = filter_by_chromatic_triples(list_of_scales)
+	# Sort by length
+	list_of_scales = sorted(list_of_scales, key=lambda l: len(l))
 
-	list_of_scales = filter_cyclic_permutations(list_of_scales)
+	if not allow_chromatic_triplets:
+		list_of_scales = filter_by_chromatic_triples(list_of_scales)
 
-	list_of_scales = filter_subscales(list_of_scales)
+	if not allow_cyclic_permutations:
+		list_of_scales = filter_cyclic_permutations(list_of_scales)
 
-	list_of_scales = filter_by_length(list_of_scales, minimum=no_fewer_than)
+	if not allow_subscales:
+		list_of_scales = filter_subscales(list_of_scales)
 
+	if minimum_length > 0:
+		# TODO: this shouldn't be an optional argument
+		list_of_scales = filter_by_length(list_of_scales, minimum=minimum_length)
+
+	if maximum_interval > 0:
+		list_of_scales = filter_by_maximum_interval(list_of_scales, maximum_permitted_interval=maximum_interval)
+
+	# Display the list of scales
 	display_scales(list_of_scales)
 
-	save_scales(list_of_scales, save_path)
-
-
-def test():
-	"""
-	Just for testing.
-	:return:
-	"""
-	scales = [[1, 3, 1, 3, 2, 2]]
-	prints(filter_subscales(scales))
-
-
-if __name__ == "__main__":
-	main(
-		no_fewer_than=6,
-		save_path='/Users/cai/Desktop/scales/'
-	)
-	prints("----------")
-	test()
+	#save_scales(list_of_scales, save_path)
