@@ -84,11 +84,11 @@ To save the output to a text file, just do as you would ordinarily in your comma
 	
 To generate MIDI files, specify the path in following command line argument:
 
-	-save-midi-to="/path/for/midi/files/"
+	--save-midi-to="/path/for/midi/files/"
 	
 For example:
 
-	python3 scale_generator.py -save-midi-to="/Users/cai/Desktop/scales/"
+	python3 scale_generator.py --save-midi-to="/Users/cai/Desktop/scales/"
 	
 will save MIDI files to a directory called "`scales`" on my Desktop, which I should create in advance.
 
@@ -98,7 +98,7 @@ Files will be named after the scale in the interval-list format, e.g. `scale-[2,
 
 The following filtering switches can be used, which will remove entries from the list.  This allows you to alter what you mean by "scale" and "different".
 
-`-filter-modes`
+`--filter-modes`
 : Every scale can be transformed into different modes, which are cyclic permutations of the same scale.  So if the scale
 :>	C, D, E, F, G, A, B
 : is the C-major scale, then
@@ -106,21 +106,21 @@ The following filtering switches can be used, which will remove entries from the
 : is also the C-major scale, but starting on the 6th note.  This particular mode is known as the Aeolian or VI mode.
 : You might, as a musician, not consider these scales to be "different", and so using this switch will only show one out of each of the modes of a scale.
 
-`-filter-chromatic-triplets`
+`--filter-chromatic-triplets`
 : The chromatic scale is the one with all the notes; twelve semitones. In our case that's `[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]`.
 : When you hear several semitones in a row, it sounds chromatic.  It can sound like a scale with a chromatic segment inserted into it.
 : For this reason it's possible to filter out scales which have three or more chromatic notes in sequence.  This is the same as filtering out sequences of intervals which have `[1, 1]` in the list.  This also includes lists which both begin and end with `1`, which would have a chromatic triplet if played in a different mode, or over two octaves.
 : Use this switch to exclude such scales.
 
-`-filter-subscales`
+`--filter-subscales`
 : If I play a scale, and then play it again but just miss out some of the notes, is that really a new scale?
 : If you don't think so, use this switch.
 
-`-maximum-interval=n`
+`--maximum-interval=n`
 : If my scale has a two notes separated by a perfect 5th, or a full octave, it doesn't necessarily sound like a scale.  You can specify the largest interval of `n` semitones permitted between two consecutive notes using this.
 : For example, `-maximum-interval=4` means you won't get anything larger than a major third in your scale.
 
-`-minimum-length=n`
+`--minimum-length=n`
 : This is another way to achieve something similar. If your scale only has two notes in it, it doesn't sound very scale-like.
 : For example, `-minimum-length=6` will give you only scales with at least 6 notes in them.
 
