@@ -22,7 +22,7 @@ from cwcx.IO import *
 # Some Constants
 
 # The notes in an octave
-NOTES = ['R', '♭2', '2', '♭3', '3', '4', '♯4', '5', '♯5', '6', '♭7', '7']
+NOTES = ['R', 'm2', 'M2', 'm3', 'M3', 'M4', 's4', 'M5', 's5', 'M6', '♭7', 'M7']
 OCTAVE = len(NOTES)
 
 # We use this to denote a partition that cannot be completed
