@@ -16,6 +16,7 @@ This is equivalent to the following:
 
 import argparse
 
+from scale_generator.scales import *
 from scale_generator.filtering import *
 from scale_generator.printing import *
 from scale_generator.midi import *

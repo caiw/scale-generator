@@ -3,8 +3,9 @@
 Code for filtering lists of scales.
 """
 
-from scale_generator.partition import *
+from scale_generator.scales import *
 from scale_generator.lists import *
+from scale_generator.reorder import *
 
 
 def filter_by_chromatic_triples(list_of_scales):
@@ -65,42 +66,6 @@ def filter_subscales(input_scales):
 	return filtered_list
 
 
-def scale_refinements(input_scale):
-	"""
-	For a given scale (list of intervals), this will return a list of scales
-	which can be found by sub-partitioning an inverval.
-	:param input_scale:
-	:return:
-	"""
-
-	# The list of refinements of the current scale
-	subscale_list = []
-
-	# We're using the interval index here as the loop variable, rather than the
-	# interval itself, as we'll use it for slicing later.
-	for interval_i in range(len(input_scale)):
-		this_interval = input_scale[interval_i]
-
-		# We know we can't sub-partition a semitone.
-		if this_interval <= 1:
-			continue
-
-		# So we look at partitioning intervals greater than whole tones.
-		else:
-			# We want to exclude trivial sub-partitions
-			sub_partitions = partition_with_intervals(this_interval, proper_partitions_only=True)
-
-			# For each sub-partition, we see what that would look like grafted
-			# into the whole scale.
-			for sub_partition in sub_partitions:
-				grafted_scale = input_scale[:interval_i] + sub_partition + input_scale[interval_i+1:]
-
-				# And if this new scale passes the test, we add it to the list.
-				subscale_list.append(grafted_scale.copy())
-
-	return subscale_list
-
-
 def contains_chromatic_triplets(input_scale):
 	"""
 	Returns true if the input scale (list of intervals) contains a chromatic
@@ -116,36 +81,6 @@ def contains_chromatic_triplets(input_scale):
 		return True
 	else:
 		return False
-
-
-def cyclic_shift(input_list, n=1):
-	"""
-	Applies a cyclic permutation to a list.
-	:param input_list:
-	:param n:
-	:return:
-	"""
-	shifted_list = input_list[n:] + input_list[:n]
-	return shifted_list
-
-
-def cyclic_permutations(input_list):
-	"""
-	Lists all cyclic permutations of a given list.
-	:param input_list:
-	:return:
-	"""
-
-	permutation_list = [input_list]
-
-	permutation = input_list.copy()
-
-	# can skip the last one because we've already got the identity permutation
-	for perutation_i in range(len(input_list) - 1):
-		permutation = cyclic_shift(permutation)
-		permutation_list.append(permutation)
-
-	return permutation_list
 
 
 def filter_cyclic_permutations(input_lists):

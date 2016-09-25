@@ -1,4 +1,45 @@
 # coding=utf-8
+"""
+Code relating to producing scales and partitioning intervals.
+"""
+
+
+def scale_refinements(input_scale):
+	"""
+	For a given scale (list of intervals), this will return a list of scales
+	which can be found by sub-partitioning an inverval.
+	:param input_scale:
+	:return:
+	"""
+
+	# The list of refinements of the current scale
+	subscale_list = []
+
+	# We're using the interval index here as the loop variable, rather than the
+	# interval itself, as we'll use it for slicing later.
+	for interval_i in range(len(input_scale)):
+		this_interval = input_scale[interval_i]
+
+		# We know we can't sub-partition a semitone.
+		if this_interval <= 1:
+			continue
+
+		# So we look at partitioning intervals greater than whole tones.
+		else:
+			# We want to exclude trivial sub-partitions
+			sub_partitions = partition_with_intervals(this_interval, proper_partitions_only=True)
+
+			# For each sub-partition, we see what that would look like grafted
+			# into the whole scale.
+			for sub_partition in sub_partitions:
+				grafted_scale = input_scale[:interval_i] + sub_partition + input_scale[interval_i+1:]
+
+				# And if this new scale passes the test, we add it to the list.
+				subscale_list.append(grafted_scale.copy())
+
+	return subscale_list
+
+
 def partition_with_intervals(remaining_length, proper_partitions_only=False):
 	"""
 	Generates all possible partitions of a thing of length `remaining`.
