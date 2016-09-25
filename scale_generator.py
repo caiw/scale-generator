@@ -19,31 +19,29 @@ from midiutil.MidiFile3 import MIDIFile
 from cwcx.Lists import *
 from cwcx.IO import *
 
-## Some Constants
+# Some Constants
 
 # The notes in an octave
-#NOTES = ['A', 'B♭', 'B', 'C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭']
-#NOTES = ['R', '♭2', '2', '♭3', 'M3', '4', '♯4', '5', '♯5', '6', '♭7', 'M7']
-NOTES = ['R', '♭2', '2', '3', '3', '4', '♯4', '5', '♯5', '6', '♭7', '7']
+NOTES = ['R', '♭2', '2', '♭3', '3', '4', '♯4', '5', '♯5', '6', '♭7', '7']
 OCTAVE = len(NOTES)
 
 # We use this to denote a partition that cannot be completed
 DEAD_END = -1
 
 
-def partition_with_intervals(remaining, proper_partitions_only=False):
+def partition_with_intervals(remaining_length, proper_partitions_only=False):
     """
     Generates all possible partitions of a thing of length `remaining`.
     :param proper_partitions_only:
-    :param remaining:
+    :param remaining_length:
     """
 
     # If we're done, we can stop here
-    if remaining == 0:
+    if remaining_length == 0:
         return []
 
     # If exactly 1 is remaining, we can only partition it if allowed.
-    elif remaining == 1:
+    elif remaining_length == 1:
         if proper_partitions_only:
             return [[DEAD_END]]
         else:
@@ -51,7 +49,7 @@ def partition_with_intervals(remaining, proper_partitions_only=False):
 
     # If exactly 2 are remaining, there are a small number of possible
     # partitions.
-    elif remaining == 2:
+    elif remaining_length == 2:
         if proper_partitions_only:
             return [[1,1]]
         else:
@@ -59,7 +57,7 @@ def partition_with_intervals(remaining, proper_partitions_only=False):
 
     # If exactly 3 are remaining, there are a small number of possible
     # partitions.
-    elif remaining == 3:
+    elif remaining_length == 3:
         if proper_partitions_only:
             return [[1,1,1], [1,2], [2,1]]
         else:
@@ -81,11 +79,11 @@ def partition_with_intervals(remaining, proper_partitions_only=False):
 
         # We go through all possible intervals we are allowed to choose at this
         # stage.
-        for chosen_interval in range(1, remaining + 1):
+        for chosen_interval in range(1, remaining_length + 1):
 
             # For each one of those intervals, the amount we have *left* to
             # partition is lessened by the interval we chose.
-            left_to_partition = remaining - chosen_interval
+            left_to_partition = remaining_length - chosen_interval
 
             # It's the recursion step!
             partitions_of_remaining = partition_with_intervals(left_to_partition)
@@ -113,7 +111,7 @@ def partition_with_intervals(remaining, proper_partitions_only=False):
 
         # Finally add the trivial partition
         if proper_partitions_only:
-            partition_list.append([remaining])
+            partition_list.append([remaining_length])
 
         # Now we have all possible partitions of our provided portion of the
         # octave, so we can return it to the next level up.
