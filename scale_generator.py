@@ -1,16 +1,13 @@
 # coding=utf-8
 """
-Generate all possible scales with no more than 2 semitones in sequence.
+Generate all possible scales.
 
 We want to generate some scales.
-The scales must cover a single octave, and they must satisfy the requirements:
--   No sequence of three notes can be semitones apart. (Two notes is fine,)
+The scales must cover a single octave.
+This is equivalent to constructing a sequence of numbers which sum to 12 (the number of semitones in an octave).
+These numbers would correspond to the intervals between consecutive notes.
 
-This is equivalent to the following:
--   Construct a sequence of numbers which sum to 12 (the number of semitones in
-	an octave, where no two consecutive numbers are 1.
-	-   These numbers would correspond to the intervals between consecutive
-		notes.
+See README.md for a better explanation.
 
 """
 
