@@ -53,8 +53,6 @@ def main():
 
 	args = parser.parse_args()
 
-	# TODO: Classification and naming of scales.
-
 	# TODO: Simplify copying.
 
 	# First list all partitions of the octave, this is "all scales", but may have many repeats and have multiple
