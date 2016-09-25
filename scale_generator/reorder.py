@@ -27,7 +27,7 @@ def cyclic_permutations(input_list):
 	permutation = input_list.copy()
 
 	# can skip the last one because we've already got the identity permutation
-	for perutation_i in range(len(input_list) - 1):
+	for permutation_i in range(len(input_list) - 1):
 		permutation = cyclic_shift(permutation)
 		permutation_list.append(permutation)
 
