@@ -3,8 +3,8 @@
 Code for filtering lists of scales.
 """
 
+from scale_generator.comparison import *
 from scale_generator.lists import *
-from scale_generator.reorder import *
 from scale_generator.printing import *
 
 
@@ -138,31 +138,29 @@ def filter_modes(input_scales, verbose=False):
 		prints()
 		prints("Filtering scales based on the presence of other modes...")
 
-	# To collect the lists which pass the test
-	# We add the first one, no questions asked.
-	accepted_scales = [input_scales[0]]
+	# The list of scales we've picked
+	accepted_scales = []
 
-	# All after the first will get checked.
-	for scale in input_scales[1:]:
+	# The list of scales we've thrown away
+	rejected_scales = []
 
-		# Record the scale which may cause this one to be rejected as a mode
-		offending_root = None
+	# For each scale, we first check if we know we need to reject it, and if not, we pick the best mode, and remember to
+	# reject all other modes in future.
 
-		is_new = True
-		for accepted_scale in accepted_scales:
-			modes = cyclic_permutations(accepted_scale)
-			if scale in modes:
-				is_new = False
-				offending_root = accepted_scale
-				break
+	for scale in input_scales:
 
-		if is_new:
-			accepted_scales.append(scale)
-		else:
-			if verbose:
-				prints("Removed {0} because it is a mode of {1}.".format(
-					scale_to_interval_list_str(scale),
-					scale_to_interval_list_str(offending_root)))
+		if scale not in rejected_scales:
+
+			mode = most_major_mode(scale)
+
+			accepted_scales.append(mode)
+
+			for rejected_scale in cyclic_permutations(mode, include_trivial=False):
+				rejected_scales.append(rejected_scale)
+				if verbose:
+					prints("Removed {0} because it is a mode of {1}.".format(
+						scale_to_interval_list_str(rejected_scale),
+						scale_to_interval_list_str(mode)))
 
 	return accepted_scales
 

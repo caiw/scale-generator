@@ -15,18 +15,22 @@ def cyclic_shift(input_list, n=1):
 	return shifted_list
 
 
-def cyclic_permutations(input_list):
+def cyclic_permutations(input_list, include_trivial=True):
 	"""
 	Lists all cyclic permutations of a given list.
+	:param include_trivial: Include the trivial cyclic permutation (identity perm)?
 	:param input_list:
 	:return:
 	"""
 
-	permutation_list = [input_list]
+	if include_trivial:
+		permutation_list = [input_list]
+	else:
+		permutation_list = []
 
 	permutation = input_list.copy()
 
-	# can skip the last one because we've already got the identity permutation
+	# can skip the last one because we've already got the identity permutation if we want it
 	for permutation_i in range(len(input_list) - 1):
 		permutation = cyclic_shift(permutation)
 		permutation_list.append(permutation)

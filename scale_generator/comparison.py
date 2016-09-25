@@ -79,16 +79,6 @@ def contains_flat_seveth(scale):
 	return contains_cumulative_interval(scale, FLAT_SEVENTH)
 
 
-def scale_distance(scale, target_scale):
-	"""
-	The distance between a scale and target scale.
-	:param scale:
-	:param target_scale:
-	:return:
-	"""
-	pass
-
-
 def majority_score(scale):
 	"""
 	Give a scale a score based on how major it is.
@@ -120,11 +110,10 @@ def majority_score(scale):
 def most_major_mode(scale):
 	"""
 	Return the most major mode of a scale.
+	If more than one scales satisfy the same score, we just take the first best one.
 	:param scale:
 	:return:
 	"""
-
-	# If more than one scales satisfy the same score, we just pick one at random
 
 	modes = cyclic_permutations(scale)
 
