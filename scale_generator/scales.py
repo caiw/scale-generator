@@ -3,6 +3,13 @@
 Code relating to producing scales and partitioning intervals.
 """
 
+# Must be the length of NOTES
+OCTAVE = 12
+
+
+def list_all_scales():
+	return partition_with_intervals(OCTAVE)
+
 
 def scale_refinements(input_scale):
 	"""

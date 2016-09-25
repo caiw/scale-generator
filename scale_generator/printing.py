@@ -5,10 +5,11 @@ Code relating to printing and displaying things in text.
 
 from datetime import datetime
 
+from scale_generator.scales import *
 
 # The notes in an octave
+# Must have length OCTAVE
 NOTES = ['R', 'm2', 'M2', 'm3', 'M3', 'M4', 's4', 'M5', 's5', 'M6', '♭7', 'M7']
-OCTAVE = len(NOTES)
 
 
 def prints(*args, sep=' ', end='\n', file=None):

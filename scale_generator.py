@@ -16,7 +16,6 @@ This is equivalent to the following:
 
 import argparse
 
-from scale_generator.scales import *
 from scale_generator.filtering import *
 from scale_generator.printing import *
 from scale_generator.midi import *
@@ -62,7 +61,7 @@ def main():
 
 	# First list all partitions of the octave, this is "all scales", but may have many repeats and have multiple
 	# instances of things we don't want, such as chromatic triplets.
-	list_of_scales = partition_with_intervals(OCTAVE)
+	list_of_scales = list_all_scales()
 
 	# Sort by length
 	list_of_scales = sorted(list_of_scales, key=lambda l: len(l))
