@@ -66,17 +66,17 @@ def contains_perfect_fifth(scale):
 	return contains_cumulative_interval(scale, PERFECT_FIFTH)
 
 
-def contains_flat_seveth(scale):
+def contains_minor_seventh(scale):
 	"""
-	Returns true if a scale contains a flat seventh.
+	Returns true if a scale contains a minor seventh.
 	:param scale:
 	:return:
 	"""
 
 	# A flat seventh is 10 semitones.
-	FLAT_SEVENTH = 10
+	MINOR_SEVENTH = 10
 
-	return contains_cumulative_interval(scale, FLAT_SEVENTH)
+	return contains_cumulative_interval(scale, MINOR_SEVENTH)
 
 
 def majority_score(scale):
@@ -92,7 +92,7 @@ def majority_score(scale):
 	# 1. Contains a major third
 	# 2. Contains a major seventh
 	# 3. Contains a perfect fifth
-	# 4. Doesn't contain a flat seventh
+	# 4. Doesn't contain a minor seventh
 
 	score = 0
 	if contains_major_third(scale):
@@ -101,7 +101,7 @@ def majority_score(scale):
 		score += 4
 	if contains_perfect_fifth(scale):
 		score += 2
-	if not contains_flat_seveth(scale):
+	if not contains_minor_seventh(scale):
 		score += 1
 
 	return score
