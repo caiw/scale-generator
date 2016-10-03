@@ -84,7 +84,7 @@ To save the output to a text file, just do as you would ordinarily in your comma
 	
 To generate MIDI files, specify the path in following command line argument:
 
-	--save_midi+to /path/for/midi/files/
+	--save_midi_to /path/for/midi/files/
 	
 For example:
 
