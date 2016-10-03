@@ -12,7 +12,7 @@ For example, let's look at everyone's first scale, C-major:
 
 This the major scale:
 
-> R, M2, M3, M4, M5, M6, M7, R'
+> R, M2, M3, P4, P5, M6, M7, R'
 
 in the key of C, where we use R to mean the root note of the scale, and the M-numbers for the intervals musicians will typically be familiar with (M2 is a "major second").
 
@@ -71,10 +71,10 @@ For example, the first few lines should be:
 	2	2	[1, 11]	['R', 'm2', 'R']
 	3	2	[2, 10]	['R', 'M2', 'R']
 	...
-	1361	7	[2, 2, 1, 2, 2, 2, 1]	['R', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'R']
+	1361	7	[2, 2, 1, 2, 2, 2, 1]	['R', 'M2', 'M3', 'P4', 'P5', 'M6', 'M7', 'R']
 	...
 	
-So on that 1361st line, you'll see the major scale, written both as the interval list `[2, 2, 1, 2, 2, 2, 1]` and the note sequence R, M2, M3, M4, M5, M6, M7, R; just as we had it before.
+So on that 1361st line, you'll see the major scale, written both as the interval list `[2, 2, 1, 2, 2, 2, 1]` and the note sequence R, M2, M3, P4, P5, M6, M7, R; just as we had it before.
 
 ### Output options
 
@@ -103,7 +103,7 @@ The following filtering switches can be used, which will remove entries from the
 :>	C, D, E, F, G, A, B
 : is the C-major scale, then
 :>	A, B, C, D, E, F, G
-: is also the C-major scale, but starting on the 6th note.  This particular mode is known as the Aeolian or VI mode.
+: is also the C-Major scale, but starting on the 6th note.  This particular mode is known as the Aeolian or VI mode.
 : You might, as a musician, not consider these scales to be "different", and so using this switch will only show one out of each of the modes of a scale.
 
 `--filter_chromatic_triplets`

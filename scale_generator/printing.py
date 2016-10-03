@@ -9,7 +9,7 @@ from scale_generator.scales import *
 
 # The notes in an octave
 # Must have length OCTAVE
-NOTES = ['R', 'm.2nd', 'M.2nd', 'm.3rd', 'M.3rd', 'P.4th', '♯.4th', 'P.5th', 'm.6th', 'M.6th', 'm.7th', 'M.7th']
+NOTES = ['R', 'm2', 'M2', 'm3', 'M3', 'P4', '♯4', 'P5', 'm6', 'M6', 'm7', 'M7']
 
 
 def prints(*args, sep=' ', end='\n', file=None):
